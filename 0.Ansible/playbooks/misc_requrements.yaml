@@ -1,0 +1,15 @@
+- name: Conigure webserver woith nginx and tls
+  hosts: webservers
+  become: true
+  vars:
+    key_file: /etc/nginx/ssl/nginx.key
+    cert_file: /etc/nginx/ssl/nginx.crt
+    conf_file: /etc/nginx/sites-available/default
+    server_name: localhost
+  tasks:
+    - name: Install mc
+      apt: name=mc update_cache=yes cache_valid_time=3600
+    - name: Install curl
+      apt: name=curl update_cache=yes cache_valid_time=3600
+    - name: Install wget
+      apt: name=wget update_cache=yes cache_valid_time=3600
