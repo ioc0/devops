@@ -1,0 +1,2282 @@
+dependency:
+  stand:
+    env: unknown
+  operator:
+    version: 1.61.21
+  pgsql:
+    host: pgsql-proxy
+    port: 5432
+    user: sfera
+    password: e2f4afd846fd73fd9d2c732a0646bb78
+  ldap:
+    base: DC=t1,DC=demo,DC=ru
+    cron: "* * * * * *"
+    groups: tasks_users
+    url: ldap://t1.demo.ru:389
+    name: ci_dos_PPTS
+    user: ci_dos_PPTS
+    password: 12345Qq
+    domain: t1.demo.ru
+  s3:
+    url: http://minio:9000
+    host: minio
+    port: 9000
+    key: 3d891a49e5f09f0f886e84e44651a4a0
+    secret: 608f6c44839e0411fdecdba9a6945d49
+    enabled: true
+    pg_restore_path: sql
+    s3_restore_path: bucket/golden
+  kafka:
+    servers: kafka-headless:9092
+  redis:
+    host: ppwi-redis
+    port: 6379
+    db: 0
+    user: ""
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  vault:
+    host: vault
+    token: test
+  activemq:
+    host: 10.7.28.20
+    port: 61616
+    user: asod
+    password: asod!QAZ
+    suffix: v2
+  es:
+    scheme: http
+    host: "ppts-es-http"
+    port: 9200
+    username: ""
+    password: ""
+  dns:
+    env: name
+    local: name.t1.demo.ru
+    external: name.sfera.ru.net
+
+
+ppch:
+  enabled: false
+  demo_db_init_yaml:
+    - name: "common_widgets"
+    - name: "keycloak"
+    - name: "profile"
+    - name: "tenant"
+    - name: "unleash"
+    - name: "route_service"
+    - name: "ppmn_user_info"
+    - name: "sdui"
+  demo_redis_init:
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  redis:
+    host: ppch-redis
+    port: 6379
+    db: 0
+    user: ""
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  ingress:
+    enabled: true
+    tls: true
+    domains:
+      external: sfera.t1.spb.ru
+      keycloak: sfera-keycloak.t1.spb.ru
+      unleash: sfera-unleash.t1.spb.ru
+  keycloak:
+    image:
+      repository: nexus.t1.demo.ru/ppch-docker-snapshot/keycloak
+      tag: 39-release-1.0.0
+  unleash:
+    enabled: true
+    image:
+      repository: nexus3.t1.demo.ru/pphm-docker-int/unleash-server
+      tag: 5.2.7-ppch
+  common:
+    enabled: false
+    image:
+      repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-common-gateway
+      tag: 94-release-1.8.0
+  general_gateway:
+    enabled: true
+    image:
+      repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-general-gateway
+      tag: 28-release-1.0.0-graal-jit
+  tenant_update:
+    enabled: true
+  services:
+    auth:
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-auth-service
+        tag: 172-release-1.9.0
+    ui:
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-core
+        tag: 97-release-1.17.0
+    tenant:
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-tenant-management-service
+        tag: 42-release-1.14.0
+    profile:
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-profile
+        tag: 270-release-1.12.1
+      env:
+        OPA_ENABLED: false
+    gateway:
+      ingress:
+        enabled: false
+        host: docker-cbr.t1.demo.ru
+        tls: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-gateway-service
+        tag: 314-release-1.11.1-graal-jit
+    core:
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-core-gateway-service
+        tag: 119-release-1.11.0
+    gwws:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-gateway-ws-service
+        tag: 53-release-1.11.0
+    widgets:
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-common-widgets
+        tag: 27-release-1.16.0
+    gwmf:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-gateway-mf-service
+        tag: 66-release-1.11.0
+    unleash_proxy:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/unleash-proxy
+        tag: v0.16.4-ppch
+    widget_functional_testing:
+      enabled: false
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-functional-testing-widget
+        tag: 9-release-1.8.1
+    widget_knowledge:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-knowledge-widget
+        tag: 8-release-1.11.1
+    widget_tasks:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-tasks-widget
+        tag: 10-release-1.8.1
+    ui_home_page:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-home-page
+        tag: 16-release-1.7.1
+    widgets_library:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/pphm-widgets-library
+        tag: 38-release-1.7.0
+    ui_defects_widget:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-defects-widget
+        tag: 14-release-1.5.1
+    ui_traffic_management_admin:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-ui-traffic-management-admin
+        tag: 36-release-1.1.1
+    route_service:
+      enabled: true
+      replicas: 1
+      opa:
+        enabled: true
+        logLevel: debug
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-route-service
+        tag: 45-release-1.3.0
+    user_sync:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-user-sync
+        tag: 27-ppauth-ldap-for-search
+    ui_admins:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-admins
+        tag: 17-release-1.4.2
+    ui_administration:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-administration
+        tag: 21-release-1.5.1
+    ui_app_menu_widget:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/sfera-ui-app-menu-widget
+        tag: 12-release-1.6.1
+    sdui:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/pphm-docker-int/pphm-sdui
+        tag: 19-release-v0.5.0
+
+
+pptm:
+  enabled: false
+  demo_db_init:
+    database: "pptm_auth pptm_config pptm_core pptm_at"
+  ldap:
+    base: OU=Groups,OU=dvpr-test-ldap,DC=t1,DC=demo,DC=ru
+    url: ldap://t1.demo.ru:389
+    name: CN=ci_dos_pptm,OU=Services,OU=demo,DC=t1,DC=demo,DC=ru
+    password: 12345Qq
+    filter: (&(objectClass=group)(|(sAMAccountName=DOS_TECH_USERS_EXT_AT)(sAMAccountName=DOS_EXT_TEAM_STAFF)(sAMAccountName=DOS_EXT_TEAM_OUTSTAFF)(sAMAccountName=DOS_EXT_IS_AUDITORS_STAFF)(sAMAccountName=Dos_*_testds_staff)(sAMAccountName=Dos_*_testds_outstaff)(sAMAccountName=Dos_*_testms_staff)(sAMAccountName=Dos_*_testms_outstaff)(sAMAccountName=Dos_*_testvs_staff)(sAMAccountName=Dos_*_testvs_outstaff)(sAMAccountName=Dos_*_testats_staff)(sAMAccountName=Dos_*_testats_outstaff)(sAMAccountName=Dos_*_tests_staff)(sAMAccountName=Dos_*_tests_outstaff)(sAMAccountName=DOS_EXT_RELEASEMNG_STAFF)(sAMAccountName=DOS_EXT_RELEASEMNG_OUTSTAFF)(sAMAccountName=Dos_*_at)))
+  services:
+    core:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pptm/pptm-core
+        tag: 3.3.0
+      env:
+        PPTM_AT_URL: http://pptm-at:8000
+        CREDENTIALS_CIPHER_PASSWORD: cjMKyaADzFNwZE58dS46bC
+        CREDENTIALS_CIPHER_SALT: Pq7s5GwM8K
+      payload:
+        volumeMounts:
+        - name: keystores
+          mountPath: /opt/t1.demo.ru.cacerts
+        volumes:
+        - name: keystores
+          hostPath:
+            type: File
+            path: /opt/t1.demo.ru.cacerts
+    gateway:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pptm/pptm-gateway
+        tag: 3.1.2
+    links:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pptm/pptm-links
+        tag: 3.0.2
+    ui:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pptm/pptm-ui
+        tag: 4.1.0
+      env:
+        PROFILE: production
+        PORT: 8000
+    auth:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/engr-auth
+        tag: 0.27.3
+    config:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pptm/pptm-config
+        tag: 3.1.0
+      env:
+        SPRING_LIQUIBASE_CONTEXTS: no_tasks
+    files:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pptm/pptm-files
+        tag: 3.1.0
+    at:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/dev/pptm/pptm-at
+        tag: 3.2.2
+
+ppwi:
+  enabled: false
+  demo_db_init:
+    database: "access file page space sfera_wiki_audit ppwi_notifier config_server metrics transfer"
+    dump_replacer_raw: |
+      if [[ "$el" == "page" ]]; then
+        echo "Start changing links"
+        ssed -i -R "s|(https?:\/\/)([^\.]{2,16})(.t1.demo.ru)|\1${POD_NAMESPACE}\3|g" ${el}.sql
+        ssed -i -R "s|(https?:\/\/)([^\.]{2,16})(.sfera.ru.net)|\1${POD_NAMESPACE}\3|g" ${el}.sql
+      fi
+  demo_redis_init:
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  ldap:
+    base: DC=t1,DC=demo,DC=ru
+    url: ldap://t1.demo.ru:389
+    name: ci_dos_ppwi
+    password: 12345Qq
+    enabled: true
+    domain: t1.demo.ru
+  services:
+    enabled: true
+    access:
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-access
+        tag: 40-release-1.22.0
+      env:
+        CHANNEL_SERVICE_URL: http://sfera-core-gateway-service:8000
+        CHANNEL_CLIENT_ID: ppwi
+        CHANNEL_CLIENT_SECRET: AyPKt2schberOherGmNLFNvUqgbmRFtV
+        DIR_SERVICE_URL: http://ppam-gateway:8000
+        DIR_CLIENT_TIMEOUT: 20s
+        DIR_USER_LOGIN: ci_dos_ppwi
+        DIR_USER_PASSWORD: 12345Qq
+        CREATE_TEST_USER: false
+        TEST_USER_LOGIN_SUFFIX: admin
+        DIR_SCHEDULE_TIME: 0 0 0/1 * * ?
+        DIR_LOCK_AT_LEAST_FOR: 59m
+        DIR_LOCK_AT_MOST_FOR: 65m
+        INTEGRATION_SSL_ENABLED: false
+        INTEGRATION_TRUST_STORE_LOCATION: /opt/t1.demo.ru.cacerts
+        INTEGRATION_TRUST_STORE_PASSWORD: changeit
+        # 1.22.0
+        SPRING_CLOUD_CONFIG_FAIL_FAST: true
+    file:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-file
+        tag: 23-release-1.21.1
+      env:
+        # 1.22.0
+        SPRING_CLOUD_CONFIG_FAIL_FAST: true
+    front:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-front
+        tag: 132-release-1.22.1
+    gateway:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-gateway-api
+        tag: 24-release-1.22.0
+      env:
+        SFERA_APPROVALS_URL: http://ppap-approvals-gateway:8000
+        # 1.22.0
+        SPRING_CLOUD_CONFIG_FAIL_FAST: true
+      resources:
+        limits:
+          cpu: 2
+          memory: 2Gi
+        requests:
+          cpu: 0.5
+          memory: 512Mi
+    page:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-page
+        tag: 125-release-1.22.0
+      env:
+        # 1.22.0
+        SPRING_CLOUD_CONFIG_FAIL_FAST: true
+      resources:
+        limits:
+          cpu: 2
+          memory: 2Gi
+        requests:
+          cpu: 0.5
+          memory: 512Mi
+    space:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-space
+        tag: 26-release-1.22.0
+      env:
+        # 1.22.0
+        SPRING_CLOUD_CONFIG_FAIL_FAST: true
+    drawio:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppwi-docker-lib/jgraph/drawio
+        tag: 21.0.2
+    ppse_migrator:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-search-migrator
+        tag: 19-release-1.22.0
+    notifier:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-notifier
+        tag: 60-release-1.22.0
+      payload:
+        volumeMounts:
+        - name: keystores
+          mountPath: /opt/t1.demo.ru.cacerts
+        volumes:
+        - name: keystores
+          hostPath:
+            type: File
+            path: /opt/t1.demo.ru.cacerts
+    plantuml:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppwi-docker-lib/plantuml/plantuml-server
+        tag: v1.2023.8
+    gateway_ws:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-gateway-ws
+        tag: 31-release-1.22.0
+      env:
+        # 1.22.0
+        SPRING_CLOUD_CONFIG_FAIL_FAST: true
+    pdf_converter:
+      enabled: true #1
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-pdf-converter
+        tag: 30-main
+    tasks_adapter:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-tasks-adapter
+        tag: 40-release-1.22.0
+      env:
+        # 1.22.0
+        SPRING_CLOUD_CONFIG_FAIL_FAST: true
+      resources:
+        limits:
+          cpu: 2
+          memory: 2Gi
+        requests:
+          cpu: 0.5
+          memory: 512Mi
+    config:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-config-server
+        tag: 21-release-1.22.0
+      env:
+        STANDARD_SOLUTION_INT_ENABLED: false
+        sfera.settings.access.user-source: LDAP
+        DATASOURCE_HOST: pgsql-proxy
+        DATASOURCE_USER: sfera
+        DATASOURCE_PASS: e2f4afd846fd73fd9d2c732a0646bb78
+    page_export:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-page-export
+        tag: 98-release-1.22.0
+      env:
+        # 1.22.0
+        SPRING_CLOUD_CONFIG_FAIL_FAST: true
+    local_audit_adapter:
+      enable: true
+      image:
+        repository: nexus.t1.demo.ru/ppwi-docker-snapshot/sfera-local-audit-adapter
+        tag: 47-release-1.16.0
+        # tag: 16-release-1.19.0
+    search_adapter:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-search-adapter
+        tag: 21-release-1.22.0
+    metrics:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-metrics
+        tag: 33-release-1.22.0
+    transfer:
+      enabled: false
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-transfer
+        tag: 25-release-1.22.0
+# test
+ppts:
+  enabled: false
+  demo_db_init:
+    database: "tasks conductor tasks_dict tasks_file tasks_import tasks_audit_adapter"
+  demo_redis_init:
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  web:
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-tasks-web
+      # tag: 87-release-1.28.0
+      tag: 99-feature-custom-attributes-v1
+    env:
+      TASKS_LINKS_INCIDENTS_PAGE_ENDPOINT: "/incidents"
+  users:
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-tasks-users
+      tag: 10-release-1.27.0
+    env:
+      TASKS_USERS_LDAP_CRON: 0 * * * * *
+  tasks:
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-tasks-tasks
+      tag: 270-release-1.28.0
+    env:
+      TASKS_ATTACHMENTS_PREVIEW_GENERATE_ENABLE: true
+      TASKS_LINKS_INCIDENTS_PAGE_ENDPOINT: "/incidents"
+      TASKS_USERS_LDAP_CRON: 0 * * * * *
+      TASK_SECURITY_AUTH_WHITE_LIST: /dictionaries/icons/**,/swagger-ui/**,/v3/api-docs/**,/hooks/**,/api/v1/auth/**,/actuator/**
+      SFERA_TASKS_CONFIG_ENABLED: true
+      SFERA_TASKS_CONFIG_STARTUP_LOAD_ENABLED: false
+      SFERA_TASKS_CONFIG_REST_ENABLED: true
+      # Integrate with ppts-tasks-event-adapter
+      TASKS_EVENT_ADAPTER_BASE_URL: "http://ppts-tasks-event-adapter:8000"
+      TASKS_EVENT_ADAPTER_CLIENT_ENABLED: true
+  configvtb:
+    enabled: false
+    replicas: 0
+    image:
+      repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-tasks-config-vtb
+      tag: 626-release-1.14
+  gateway:
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-tasks-gateway
+      tag: 21-release-1.27.0
+  csv:
+    enabled: false
+    replicas: 0
+    image:
+      repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-tasks-import
+      tag: 46-release-mvp3
+  workflow:
+    enabled: true
+    replicas: 1
+    image:
+      repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-workflow
+      tag: 273-develop
+    es:
+      host: http://ppts-es-minimal:9200
+      user: elasctic
+      password: changeme
+  conductorui:
+    enabled: true
+    ingress:
+      host: sfera-conductor.example.local
+    image:
+      repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-workflow-web
+      tag: 32-release-1.9
+  dictionaries:
+    enabled: true
+    replicas: 1
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-tasks-dictionaries
+      tag: 8-release-1.27.0
+  notifications:
+    enabled: true
+    replicas: 1
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-tasks-notifications
+      tag: 40-release-1.28.0
+  file:
+    enabled: true
+    replicas: 1
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-wiki-file
+      tag: 17-release-1.18.0
+  import_jira:
+    enabled: true
+    replicas: 1
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-tasks-import-jira
+      tag: 52-release-1.28.0
+  event_adapter:
+    enabled: true
+    replicas: 1
+    image:
+      repository: nexus3.t1.demo.ru/ppts-docker-int/sfera-tasks-event-adapter
+      tag: 21-release-1.28.0
+    env:
+      RELEASE_NAME: sfera-tasks-event-adapter
+      APPLICATION_LOG_LEVEL: debug
+      JAVA_OPTS: >
+        -Djavax.net.ssl.trustStorePassword=$(TRUST_STORE_PASSWORD) -Djavax.net.ssl.trustStore=/opt/t1.demo.ru.cacerts
+      # 
+      # DB 
+      EVENT_ADAPTER_DB_DEFAULT_SCHEMA: event_adapter
+      EVENT_ADAPTER_DB_MIGRATION_SCHEMA: event_adapter
+      EVENT_ADAPTER_DB_URL: jdbc:postgresql://pgsql-proxy:5432/tasks_audit_adapter?currentSchema=event_adapter
+      # each 0 .. N
+      SFERA_PLATFORM_TASKS_EVENTADAPTER_SOURCES_0_CODE: notifications
+      SFERA_PLATFORM_TASKS_EVENTADAPTER_SOURCES_0_TYPE: kafka
+      SFERA_PLATFORM_TASKS_EVENTADAPTER_SOURCES_0_KAFKAPROPERTIES_SECURITYPROTOCOL: PLAINTEXT
+      SFERA_PLATFORM_TASKS_EVENTADAPTER_SOURCES_0_KAFKAPROPERTIES_GROUPID: tasks-event-adapter
+      SFERA_PLATFORM_TASKS_EVENTADAPTER_SOURCES_0_KAFKAPROPERTIES_TOPIC: notifications-messages
+      SFERA_PLATFORM_TASKS_EVENTADAPTER_SOURCES_0_KAFKAPROPERTIES_BOOTSTRAPSERVERS: kafka-headless:9092
+      # 
+      # SFERA_TASKS_URL: http://ppts-tasks-gateway:8000
+      # SFERA_TASKS_USER_LOGIN: ""
+      # SFERA_TASKS_USER_PASSWORD: ""
+      # 
+      # EVENT_ADAPTER_DB_URL: jdbc:postgresql://:/tasks_audit_adapter
+      # EVENT_ADAPTER_DB_USER: ""
+      # EVENT_ADAPTER_DB_PASSWORD: ""
+      # EVENT_ADAPTER_DB_ADMIN_USER: ""
+      # EVENT_ADAPTER_DB_ADMIN_PASSWORD: ""
+      TRUST_STORE_PASSWORD: changeit
+      SFERA_TASKS_KAFKA_KEYSTORE_PASSWORD: changeit
+      SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE: '5'
+      # 
+      SFERA_TASKS_WORKFLOW_URL: http://ppts-tasks-workflow:8080
+      # Certs
+      SFERA_TRUSTED_CERTIFICATES: "/opt/ssl/ca.crt"
+      SFERA_TRUSTED_CERTIFICATES_PASSWORD: "ppts-tasks-event-adapter"
+    payload:
+      volumeMounts:
+      - name: tls-ca-cert
+        mountPath: /opt/ssl/ca.crt
+        subPath: ca.crt
+        readOnly: true
+      volumes:
+      - name: tls-ca-cert
+        secret:
+          secretName: ppts-tasks-event-adapter-certificate-secret
+          items:
+          - key: ca.crt
+            path: ca.crt
+
+ppar:
+  enabled: false
+  demo_db_init:
+    database: "sfera_confluence_parser_api sfera_documents_backend_api sfera_documents_doc_sphere_api sfera_documents_gateway_api sfera_documents_integration_api sfera_documents_internal_api sfera_documents_plugin_api sfera_plugin_hub_api"
+    dump_replacer_raw: |
+      if [[ "$el" == "sfera_documents_backend_api" ]]; then
+        ssed -i -R "s|(https?:\/\/)([^\.]{2,16})(.t1.demo.ru)|\1${POD_NAMESPACE}\3|g" ${el}.sql
+        ssed -i -R "s|(https?:\/\/)([^\.]{2,16})(.sfera.ru.net)|\1${POD_NAMESPACE}\3|g" ${el}.sql
+      fi
+  services:
+    backend:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppar-docker-public/sfera-documents-backend-api
+        tag: 137-release-2.17.0
+    confluence:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-confluence-parser-api
+        tag: 472-release-2.6.0
+    documents:
+      image:
+        repository: nexus3.t1.demo.ru/ppar-docker-public/sfera-documents-doc-sphere-api
+        tag: 24-release-2.17.0
+    front:
+      image:
+        repository: nexus3.t1.demo.ru/ppar-docker-public/sfera-documents-front
+        tag: 196-release-2.17.0
+      env:
+        MAX_SIZE_ATTACH_FILE: 32M
+        ACCEPT_EXTENSIONS: "jpeg,jpg,png,tiff,xls,xlsx,doc,docx,ppt,pptx,txt,csv,pdf,rtf,xmi,eap,vsdx"
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-documents-gateway-api
+        tag: 268-release-2.12.0
+      env:
+        SECURITY_MASTER_PASSWORD: sfera
+        WHITE_LIST: ""
+    integration:
+      enabled: false
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-documents-integration-api
+        tag: 34-release-2.0.2
+    internal:
+      enabled: false
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-documents-internal-api
+        tag: 47-release-2.0.4
+    plugin_hub_api:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/ppar-docker-public/sfera-plugin-hub-api
+        tag: 19-release-2.16.0
+    documents_plugin_api:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/ppar-docker-public/sfera-documents-plugin-api
+        tag: 24-release-2.16.0
+    plantuml:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppwi-docker-lib/plantuml/plantuml-server
+        tag: v1.2023.8
+    drawio:
+      enabled: false
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppwi-docker-lib/jgraph/drawio
+        tag: 21.0.2
+    msword_parser_api:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppar-docker-public/sfera-msword-parser-api
+        tag: 40-release-2.17.0
+      env:
+        S3_TYPE: S3
+        MAX_FILE_SIZE: 1GB
+
+versions:
+  enabled: true
+
+ppsc:
+  enabled: false
+  demo_db_init_yaml:
+  - name: "ppsc_auth"
+  - name: "ppqc"
+  - name: "ppsc"
+    databasecommand_raw: |
+      psql ppsc -c 'TRUNCATE TABLE ppsc.repositories CASCADE;' || true
+  front:
+    image:
+      repository: nexus.t1.demo.ru/dev/ppsc/ppsc-frontend
+      tag: 2024.12.1
+  auth:
+    image:
+      repository: nexus.t1.demo.ru/dev/engr-auth
+      tag: 0.30.2
+  backend:
+    image:
+      repository: nexus.t1.demo.ru/dev/ppsc/ppsc-backend
+      tag: 2024.12.3
+    ppch: http://sfera-core-gateway-service:8000
+  qualityapi:
+    image:
+      repository: nexus.t1.demo.ru/dev/ppsc/quality-api
+      tag: 2024.12.1
+    env:
+      KAFKA_PPSC_EVENTS_TOPIC: ppsc-events-repo
+      SCAN_ASYNC_KEEPALIVE_MIN: 1
+      SCAN_ASYNC_QUEUE_SIZE: 100
+      SCAN_ASYNC_THREADS: 5
+      TRACING_ENABLED: false
+      TRACING_HOST: http://localhost
+      JDBC_SCHEMA: ppqc
+    payload:
+      volumeMounts:
+      - name: keystores
+        mountPath: /opt/t1.demo.ru.cacerts
+      volumes:
+      - name: keystores
+        hostPath:
+          type: File
+          path: /opt/t1.demo.ru.cacerts
+  scanner:
+    image:
+      repository: nexus.t1.demo.ru/dev/ppsc/quality-scanner-api
+      tag: 2024.12.1
+    env:
+      APP_LOG_ROOT: info
+      KAFKA_PPSC_EVENTS_TOPIC: ppsc-events-repo
+      RUN_PARAMS: '-Djavax.net.ssl.trustStore=/opt/t1.demo.ru.cacerts -Djavax.net.ssl.trustStorePassword=changeit'
+    payload:
+      volumeMounts:
+      - name: keystores
+        mountPath: /opt/t1.demo.ru.cacerts
+      volumes:
+      - name: keystores
+        hostPath:
+          type: File
+          path: /opt/t1.demo.ru.cacerts
+  compute:
+    image:
+      repository: nexus.t1.demo.ru/ppsc/quality-compute-engine
+      tag: 2024.3.0
+  codilo:
+    enabled: true
+    image:
+      repository: nexus.t1.demo.ru/dev/ppsc/codilo
+      tag: 2024.12.3
+  proxy:
+    enabled: true
+    ppqc: http://ppsc-quality-api:8881
+    image:
+      repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-common-gateway
+      tag: 94-release-1.8.0
+  git_migrator:
+    enabled: true
+    image:
+      repository: nexus.t1.demo.ru/ppsc/ppsc-migrator
+      tag: 2024.1.1
+
+ppap:
+  enabled: false
+  demo_db_init:
+    database: "ppap ppap_calendar ppdc_catalog"
+  ldap:
+    base: DC=t1,DC=demo,DC=ru
+    url: ldap://t1.demo.ru:389
+    name: ci_dos_ppap
+    password: 12345Qq
+  services:
+    ui:
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-approvals-ui
+        tag: 546-release-2.18.0
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-approvals-gateway
+        tag: 97-release-1.1.0
+    api:
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-approvals-api-service
+        tag: 1048-release-2.18.0
+      env:
+        SFERA_APPROVALS_OAUTH_USERNAME: ci_dos_ppap@t1.demo.ru
+        SFERA_APPROVALS_OAUTH_PASSWORD: 12345Qq
+        SFERA_APPROVALS_SCHEDULER_LOAD_DICTIONARIES_CRON: 0 30 1 * * *
+        SFERA_APPROVALS_SCHEDULER_LDAP_USER_UPLOAD_CRON: 0 0 4 * * *
+        SFERA_APPROVALS_SCHEDULER_SM_CRON: 0 0 5 * * *
+        SFERA_APPROVALS_SCHEDULER_SM_ENABLED: false
+        SFERA_APPROVALS_SCHEDULER_STATUS_PROCESSED_ZNI_CRON: 0 0/30 * * * *
+        SFERA_APPROVALS_LIQUIBASE_CONTEXTS: prod
+        APPLICATION_SYSTEMS_KNOWLEDGE_LINK_TEMPLATE: '/knowledge/pages?id=$originalId;&version=$publicationId;'
+        SFERA_APPROVALS_EXTENSION_ENABLED: false
+        SFERA_APPROVALS_PLUGIN_HUB_CLIENT_ENABLED: true
+        PLUGIN_HUB_ROOT_URI: http://ppar-plugin-hub-api:8000
+    catalog:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/ppdc-catalog-svc
+        tag: 188-release-1.4
+    notification:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-approvals-notification-service
+        tag: 63-release-1.7.0
+    calendar:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-approvals-calendar-service
+        tag: 12-release-1.0.0
+    history:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-approvals-history-service
+        tag: 50-release-1.4.0
+    widget:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-approvals-widget-ui
+        tag: 230-release-2.18.0
+    plugin_hub_api:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-plugin-hub-api
+        tag: 68-release-2.0.14spring-2.6.3
+    plugin_api:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-approvals-plugin-api
+        tag: 21-release-1.0.0
+
+ppqg:
+  enabled: false
+  demo_db_init:
+    database: "ppqg ppqg_framework"
+  ldap:
+    base: DC=t1,DC=demo,DC=ru
+    url: ldap://t1.demo.ru:389
+    name: ci_dos_ppqg
+    password: 12345Qq
+  services:
+    frontend:
+      image:
+        repository: nexus.t1.demo.ru/ppqg-docker-snapshot/ppqg-frontend
+        tag: 430-release-2024.201-2
+    backend:
+      image:
+        repository: nexus.t1.demo.ru/ppqg-docker-snapshot/ppqg-backend-services
+        tag: 1079-master
+      env:
+        AUTH_TYPE: CHANNEL
+        AUTH_HOST: http://sfera-core-gateway-service:8000
+        AUTH_ANTI_REPLAY_URI: /api/auth/internal/check-token
+        AUTH_ANI_REPLAY_ENABLE: false
+        RELEASE_HOST: http://pprc-gateway-backend:8000
+        ACL_RELEASE_ENABLE: false
+        ACL_RELEASE_ACCOUNTS: 'ci_dos_PPTS@t1.demo.ru'
+        RELEASE_USERNAME: 'ci_dos_PPTS@t1.demo.ru'
+        RELEASE_PASSWORD: '12345Qq'
+        EPA_ENABLED: false
+        _JAVA_OPTIONS: "-Dlogging.level.ru.sfera=TRACE"
+        QGFRAMEWORK_HOST: http://ppqg-backend-framework:8080/api
+        QGFRAMEWORK_EVENT_ENABLED: true
+        TASK_HOST: http://ppts-tasks-tasks:8000
+        TASK_EVENT_ENABLED: true
+        TASK_EVENT_TOPIC: ENTITIES
+        TASK_EVENT_BOOTSTRAP_ADDRESS: kafka-headless:9092
+        QGFRAMEWORK_EVENT_BOOTSTRAP_ADDRESS: kafka-headless:9092
+        QGFRAMEWORK_USERNAME: 'ci_dos_ppts@t1.demo.ru'
+        QGFRAMEWORK_PASSWORD: '12345Qq'
+        KAFKA_PROTOCOL: PLAINTEXT
+        SCRIPTS_STORAGE: DIR
+    login:
+      enabled: false
+    framework:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppqg-docker-snapshot/ppqg-backend-framework
+        tag: 106-master
+      env:
+        QUALITYGATE_PUBLICATION_DATE_CHECK_ENABLED: false
+        RELEASE_ENABLED: true
+        RELEASE_GET_URI: /main-fw/api/v0.1/integrations/release-for-qg
+        RELEASE_HOST: /pprc/release
+        RELEASE_USERNAME: yuriy.zhukovsky@t1.demo.ru
+    gateway:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppqg-docker-snapshot/ppqg-api-gateway
+        tag: 50-master
+      env:
+        SFERA_GATEWAY_URL: http://common-gateway:8000
+
+ppcm:
+  enabled: false
+  demo_db_init:
+    database: "ppcm"
+  services:
+    backend:
+      image:
+        repository: nexus.t1.demo.ru/ppcm-docker-snapshot/sfera-cmdb-service-api
+        tag: 107-develop
+    frontend:
+      image:
+        repository: nexus.t1.demo.ru/ppcm-docker-snapshot/sfera-configurations-ui
+        tag: 113-dev
+
+ppin:
+  enabled: false
+  demo_db_init:
+    database: "ppin_incident"
+
+pprc1:
+  enabled: false
+  demo_db_init:
+    database: "pprc1_releases pprc1_workflow pprc1_fw pprc1_fw_migration"
+  es:
+    scheme: http
+    host: "pprc1-es-http:9200"
+    username: ""
+    password: ""
+  services:
+    backend:
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-main-backend
+        tag: 1057-release-2024.1-03-3
+    frontend:
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-main-frontend
+        tag: 681-release-2024.1-03-3
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-gateway-backend
+        tag: 59-release-2024.1-03-2
+    orchestration_service:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-process-orchestration-service
+        tag: 50-release-2024.01-03-4
+    workflow:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-workflow
+        tag: 263-release-1.9.1
+    workflow_scripts:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-workflow-scripts
+        tag: 15-release-2024.1-03-3
+    workflow_web:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-workflow-web
+        tag: 33-feature-istio
+    fw_frontend:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-fw-frontend
+        tag: 214-release-2024.2-01-1
+    fw_backend:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-fw-backend
+        tag: 155-release-2024.2-01
+
+pprc:
+  enabled: false
+  demo_db_init:
+    database: "pprc_releases pprc_workflow"
+  es:
+    scheme: http
+    host: "pprc-es-http:9200"
+    username: ""
+    password: ""
+  services:
+    backend:
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-main-backend
+        tag: 1057-release-2024.1-03-3
+    frontend:
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-main-frontend
+        tag: 681-release-2024.1-03-3
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-gateway-backend
+        tag: 59-release-2024.1-03-2
+    orchestration_service:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-process-orchestration-service
+        tag: 50-release-2024.01-03-4
+    workflow:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-workflow
+        tag: 263-release-1.9.1
+    workflow_scripts:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-workflow-scripts
+        tag: 11-release-2024.2-03-1
+    workflow_web:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-workflow-web
+        tag: 33-feature-istio
+    fw_frontend:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-fw-frontend
+        tag: 326-release-PPRC-2024.2-03-3
+    fw_backend:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pprc-docker-snapshot/pprc-fw-backend
+        tag: 301-release-2024.2-03-3
+
+ppcg:
+  enabled: false
+  demo_db_init:
+    database: "ppcg_rfc"
+  services:
+    backend:
+      image:
+        repository: nexus.t1.demo.ru/ppcg-docker-snapshot/ppcg-main-backend
+        tag: 114-develop
+    frontend:
+      image:
+        repository: nexus.t1.demo.ru/ppcg-docker-snapshot/ppcg-main-frontend
+        tag: 76-develop
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/ppcg-docker-snapshot/ppcg-gateway-backend
+        tag: 29-develop
+
+ppcs:
+  enabled: false
+  demo_db_init:
+    database: "ppcs_catalog"
+  services:
+    catalog:
+      image:
+        repository: nexus.t1.demo.ru/ppcs-docker-snapshot/catalog
+        tag: 136-develop
+    frontend:
+      image:
+        repository: nexus.t1.demo.ru/ppcs-docker-snapshot/catalog-ui
+        tag: 30-develop
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/ppcs-docker-snapshot/catalog-gateway
+        tag: 3-develop
+
+ppsr:
+  enabled: false
+  demo_db_init:
+    database: "ppsr ppsr_workflow"
+  services:
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/ppsr-docker-snapshot/sfera-servicerequest-gateway
+        tag: 10-develop
+    service:
+      image:
+        repository: nexus.t1.demo.ru/ppsr-docker-snapshot/sfera-servicerequests-service
+        tag: 240-develop
+      env:
+        SSL_ENABLE: "false"
+        SM_URL: http://localhost:8000
+        AUDIT_ENABLED: "false"
+        SR_SCHEDULE_PROCESS_SM_TASKS: '0 0 5 31 2 ?'
+    web:
+      image:
+        repository: nexus.t1.demo.ru/ppsr-docker-snapshot/sfera-servicerequests-web
+        tag: 212-develop
+    workflow:
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-pub/sfera-workflow
+        tag: 255-release-1.9.0
+
+ppmo:
+  enabled: false
+  demo_db_init:
+    database: "ppmo_common_settings_manager ppmo_ci_search ppmo_config_exporter ppmo_config_alert core_event_processor ppmo_event_saver ppmo_job_processor"
+  services:
+    cisearch:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/core-ci-search
+        tag: demo-errp-127
+    configchecker:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/core-config-checker
+        tag: demo-errp-115
+    configexporter:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/core-config-exporter
+        tag: 23.04.12-198
+    configvmalert:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/core-config-vmalert
+        tag: 23.04.12-153PPMO535-new-expression
+    eventlistener:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/core-event-listener
+        tag: 23.04.12-41PPMO501-event-saver
+    eventsaver:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/core-event-saver
+        tag: 23.04.12-49PPMO501-event-saver
+    jobprocessor:
+      # TODO set to current stand, pppm.t1.demo.ru  - hardcore
+      domain: pppm.t1.demo.ru
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/core-job-processor
+        tag: 23.04.12-158log_outgoing_DEV
+      env:
+        FEIGN_SFERA-AUTH-SERVICE_USERNAME: user@test.local
+        FEIGN_SFERA-AUTH-SERVICE_PASSWORD: Qwerty1
+    alert:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/core-alert
+        tag: 17-feature-PPMO452-core-alert-increment
+    settingsmanager:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/common-settings-manager
+        tag: 23.04.06-133
+
+pppm:
+  enabled: false
+  demo_db_init:
+    database: "pppm_portal"
+  domain:
+    core: pppm.t1.demo.ru
+    backend: pppm-backend.t1.demo.ru
+  services:
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/pppm-gateway
+        tag: 23.03.01-13PPPM831-edit-readme
+    backend:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/portal-portalbackend
+        tag: 23.04.14-484PPPM969
+    frontend:
+      patch: |
+        sed -i "s/http:\/\/portal-portalbackend-ds5-genr05-esmc-sfera-dev.apps.ds5-genr05.corp.dev.vtb/http:\/\/pppm-backend.t1.demo.ru/g" /usr/share/nginx/html/static/js/*.js
+        sed -i "s/http:\/\/portal-portalfrontend-ds5-genr05-esmc-sfera-dev.apps.ds5-genr05.corp.dev.vtb/http:\/\/pppm.t1.demo.ru/g" /usr/share/nginx/html/static/js/*.js
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/portal-portalfrontend
+        tag: 23.04.17-415
+    visualization:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/portal-visualizationbackend
+        tag: 23.04.12-272PPPM958
+    databasemigrator:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/portal-databasemigrator
+        tag: 23.04.13-141
+    ucmdbintegrationservice:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/portal-ucmdbintegrationservice
+        tag: 23.03.23-15
+    sqlfiller:
+      image:
+        repository: nexus.t1.demo.ru/pppm/pppm-sql-filler
+        tag: 0.2
+
+ppdp:
+  enabled: false
+  services:
+    configpoller:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/collectors-config-poller
+        tag: 23.02.27-5
+    configurationservice:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/collectors-configuration-service
+        tag: 23.04.06-49
+    pingexporter:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/collectors-sql-exporter
+        tag: 26-master
+    sqlexporter:
+      image:
+        repository: nexus.t1.demo.ru/pppm-docker-snapshot/collectors-ping-exporter
+        tag: 26-feature-PPDP398
+
+ppun:
+  enabled: false
+  demo_db_init:
+    database: "source_demo target_demo tdfm_rep"
+  services:
+    configserver:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-config-server
+        tag: 2.1.7
+    eureka:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-eureka
+        tag: 2.1.7
+    apigateway:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-api-gateway
+        tag: 2.1.7
+    classification:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-classification-service
+        tag: 2.0
+    sourceservice:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-source-service
+        tag: 2023.04.1
+    preparetarget:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-prepare-target-service
+        tag: 2023.04.1
+    externaldatabaseadapter:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-external-database-adapter
+        tag: 2023.04.1
+    profileservice:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-profile-service
+        tag: 2023.04.1
+    maskingservice:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-masking-service
+        tag: 2023.04.1
+    proxy:
+      image:
+        repository: nexus.t1.demo.ru/tdfm/tdfm-demo-proxy
+        tag: 0.1
+
+pplt:
+  enabled: false
+  demo_db_init:
+    database: "lt_admin lt_execution_manager lt_report lt_grafana lt_vault"
+  demo_redis_init:
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  redis:
+    host: pplt-redis
+    port: 6379
+    db: 0
+    user: ""
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  clickhouse:
+    host: ch-pplt
+    port:
+      http: 8123
+      tcp: 9000
+    user: pplt
+    pass: j9mrq0vk6c6xn9rqsy51fcbu
+  services:
+    gateway:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-gateway
+        tag: v24.3.3
+    admin:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-admin-panel
+        tag: v24.3.3_git_tls_ignore # fix ssl problem
+      env:
+        GIT_SKIP_SSL_VERIFY: true
+    ui:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-fe
+        tag: v24.3.3
+    execution:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-execution-manager
+        tag: v24.3.3
+    report:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-report-service
+        tag: v24.3.3
+    agent:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-agent
+        tag: v24.3.3
+      env:
+        POD_MEM_LIMIT: 1024MB
+        POD_CPU_LIMIT: 2
+        KAFKA_HOSTS: ['kafka-headless:9092']
+        EXECUTION_MANAGER_URL: 'http://pplt-execution-manager:8080'
+        EXECUTION_MANAGER_AUTH_ENABLED: false
+    s3proxy:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-s3-proxy
+        tag: v24.3.3
+    archive:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-archive-manager
+        tag: v24.3.3
+    aim:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pplt/lt-aim
+        tag: v24.1.5
+    vault:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplt/lt-vault
+        tag: v24.3.3
+      env:
+        CIPHER_KEY: "01234567890123456789012345678901"
+
+ppor:
+  enabled: false
+  demo_db_init:
+    database: "ppor_auth ppor"
+    dump_replacer_raw: |
+      if [[ "$el" == "ppor" ]]; then
+        ssed -i -R "s|(https?:\/\/)([^\.]{2,16})(.t1.demo.ru)|\1${POD_NAMESPACE}\3|g" ${el}.sql
+        ssed -i -R "s|(https?:\/\/)([^\.]{2,16})(.sfera.ru.net)|\1${POD_NAMESPACE}\3|g" ${el}.sql
+        ssed -i -R  "s|(git@)([^\.]{2,16})(.t1.demo.ru)|\1{POD_NAMESPACE}\3|g" ${el}.sql
+        ssed -i -R  "s|docker-cbr\.t1\.demo\.ru|docker-{POD_NAMESPACE}\.t1\.demo\.ru|g" ${el}.sql
+      fi
+  ldap:
+    base: DC=t1,DC=demo,DC=ru
+    url: ldap://t1.demo.ru:389
+    name: ci_dos_ppor
+    password: 12345Qq
+    filter: (&(objectClass=group)(|(sAMAccountName=tat-dev_*)(sAMAccountName=sfera_i_*)))
+  services:
+    auth:
+      image:
+        repository: nexus.t1.demo.ru/dev/engr-auth
+        tag: 0.30.2
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/dev/ppor/sfera-ppor-gateway
+        tag: 2024.10.0.9
+    migration:
+      image:
+        repository: nexus.t1.demo.ru/ppor/sfera-ppor-migration
+        tag: 2023.14.0.36
+    front:
+      image:
+        repository: nexus.t1.demo.ru/dev/ppor/sfera-ppor-front
+        tag: 2024.12.1.72
+    remoting:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppor/sfera-ppor-remoting
+        tag: 2024.4.0.82
+    war:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppor/sfera-ppor-war
+        tag: 2024.12.4.124
+
+ppbd:
+  enabled: false
+  demo_db_init:
+    database: "ppbd_auth lic lic_front"
+  back:
+    mountPath: /nexus-data
+    image:
+      repository: nexus.t1.demo.ru/dev/ppdl/ppdl-back
+      tag: 2024.5.0.4
+    env:
+      LOGGING_CONFIG: json
+  front:
+    image:
+      repository: nexus.t1.demo.ru/ppdl/ppdl-fe
+      tag: 2024.2.0.11
+    env:
+      ENABLE_LICENSE_MODULE: false
+  gateway:
+    image:
+      repository: nexus.t1.demo.ru/ppdl/ppbd-gateway
+      tag: 2023.5.0.2
+  las:
+    replicas: 0
+  lfa:
+    replicas: 0
+  lss:
+    replicas: 0
+  scancode:
+    replicas: 0
+  auth:
+    replicas: 0
+  init:
+    image:
+      repository: nexus.t1.demo.ru/ppbd/ppbd-init
+      tag: 0.2
+
+
+ppat:
+  enabled: false
+  demo_db_init:
+    database: "ppat_auth ppat ppat_spacer"
+  demo_redis_init:
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  redis:
+    host: ppat-redis
+    port: 6379
+    db: 0
+    user: ""
+    password: bx6yc1p4xpcwtozacx6056cfvrtm
+  services:
+    moon:
+      ingress:
+        enabled: false
+        host: ppat.t1.demo.ru
+      containers:
+        moon:
+          repository: quay.io/aerokube/moon
+          tag: 2.6.0
+        moonconf:
+          repository: quay.io/aerokube/moon-conf
+          tag: 2.6.0
+        moonui:
+          repository: quay.io/aerokube/selenoid-ui
+          tag: 1.10.11
+    frontend:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppat/ppwt-front
+        tag: 234
+    gateway:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppat/ppwt-gateway
+        tag: 125
+    backend:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppat/ppwt-backend
+        tag: 384
+    spacer:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppat/ppwt-spacer
+        tag: 53
+    video:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppat/ppwt-video
+        tag: 13
+      env:
+        PORT: '8081'
+    auth:
+      image:
+        repository: nexus.t1.demo.ru/ppat/engr-auth
+        tag: 0.10.1-on-liberica-openjdk-debian-17-2
+      env:
+        LDAP_GROUPS_BASE_DN: OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_SYNC_CRON: 0 */1 * * * *
+
+dvpr:
+  enabled: false
+  demo_db_init_yaml:
+  - name: "devportal-search"
+  - name: "dvpr_auth"
+  - name: "control-plane"
+  - name: "dvpr_environment"
+  - name: "dvpr_metrics_service"
+  - name: "devportal-worker"
+  - name: "devportal-component"
+    databasecommand_raw: |
+      psql devportal-worker -c 'TRUNCATE TABLE template_entity CASCADE;' || true
+  elastic:
+    url: http://dvpr-es-http:9200
+    user: admin
+    password: admin
+  services:
+    componentservice:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/dev/dvpr/dvpr-component-service
+        tag: 2024.13.0
+    componentworker:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/dvpr/dvpr-component-worker
+        tag: 2024.13.0
+      env:
+        LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_CLIENT_RESTTEMPLATE: TRACE
+    controlplane:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/dvpr/dvpr-control-plane
+        tag: 2024.13.0
+      env:
+        LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_CLIENT_RESTTEMPLATE: TRACE
+    migration:
+      enabled: false
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/dvpr/dvpr-db-migration-control
+        tag: 2023.5.1
+    front:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/dev/dvpr/dvpr-frontend
+        tag: 2024.13.0
+    gateway:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/dev/dvpr/dvpr-gateway
+        tag: 2024.13.0
+    notification:
+      enabled: false
+      image:
+        repository: nexus.t1.demo.ru/dvpr/dvpr-notification-service
+        tag: 2024.11.0
+    search:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/dvpr/dvpr-search-service
+        tag: 2024.13.0
+    auth:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/engr-auth
+        tag: 0.27.3
+      payload: {}
+    environment_service:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/dvpr/dvpr-environment-service
+        tag: 2024.13.0
+    metricsservice:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/dvpr/dvpr-metrics-service
+        tag: 2024.13.0
+
+ppas:
+  enabled: false
+  demo_db_init:
+    database: "ppas"
+  services:
+    web:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppas-docker-snapshot/sfera-itam-web
+        tag: 0.1.0
+    gateway:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppas-docker-snapshot/sfera-itam-gateway
+        tag: 0.1.0
+    service:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppas-docker-snapshot/sfera-itam-service
+        tag: 0.1.1
+
+team:
+  enabled: false
+  demo_db_init:
+    database: "teams teams_file"
+  services:
+    web:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/team-docker-int/sfera-teams-web
+        tag: 106-release-1.21.1
+    gateway:
+      certificate:
+        enabled: true
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/team-docker-int/sfera-teams-gateway
+        tag: 47-release-1.21.0
+      env:
+        TEAM_GATEWAY_USE_INSECURE_TRUST_MANAGER: true
+        SFERA_GATEWAY_TRUSTED_CERTIFICATES: /opt/ssl/ca.crt
+      payload:
+        volumeMounts:
+        - name: tls-ca-cert
+          mountPath: /opt/ssl/ca.crt
+          subPath: ca.crt
+          readOnly: true
+        volumes:
+        - name: tls-ca-cert
+          secret:
+            secretName: team-gateway-certificate-secret
+            items:
+            - key: ca.crt
+              path: ca.crt
+    service:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/team-docker-int/sfera-teams-service
+        tag: 219-release-1.21.2
+      env:
+        TEAM_CALENDAR_USERNAME: yuriy.zhukovsky@t1.demo.ru
+        TEAM_CALENDAR_PASSWORD: demo
+        TEAM_DB_URL: jdbc:postgresql://pgsql-proxy:5432/teams
+        TEAM_DB_DEFAULT_SCHEMA: teams
+        TEAM_DB_DROP_FIRST: false
+        TEAM_TECH_CREDENTIALS_USERNAME: yuriy.zhukovsky@t1.demo.ru
+        TEAM_TECH_CREDENTIALS_PASSWORD: demo
+        TEAM_SECURITY_DIR_ENABLED: false
+        TEAM_SECURITY_LEGACY_FILTER_ENABLED: true
+      payload:
+        command: {}
+    calendar:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/team-docker-int/sfera-teams-calendar
+        tag: 16-release-1.21.0
+      env:
+        TEAM_SECURITY_DIR_ENABLED: false
+        TEAM_SECURITY_LEGACY_FILTER_ENABLED: true
+        TEAM_TECH_CREDENTIALS_USERNAME: yuriy.zhukovsky@t1.demo.ru
+        TEAM_TECH_CREDENTIALS_PASSWORD: demo
+    file:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppwi-docker-snapshot/sfera-wiki-file
+        tag: 115-develop
+    catalog:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/ppdc-catalog-svc
+        tag: 39-release-1.0
+      env:
+        DB_DROP_FIRST: false
+    time_storage:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/team-docker-int/sfera-teams-time-storage
+        tag: 25-develop
+      env:
+        TEAM_CREATE_WORKLOGS_START_DATE: "2024-09-01"
+        TEAM_DB_DROP_FIRST: false
+        TEAM_TECH_CREDENTIALS_USERNAME: yuriy.zhukovsky@t1.demo.ru
+        TEAM_TECH_CREDENTIALS_PASSWORD: demo
+    time_changes:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/team-docker-int/sfera-teams-time-changes
+        tag: 15-develop
+      env:
+        TEAM_DB_DROP_FIRST: false
+        TEAM_SECURITY_DIR_ENABLED: false
+        TEAM_SECURITY_LEGACY_FILTER_ENABLED: true
+        TEAM_TECH_CREDENTIALS_USERNAME: yuriy.zhukovsky@t1.demo.ru
+        TEAM_TECH_CREDENTIALS_PASSWORD: demo
+    time_web:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/team-docker-int/sfera-teams-time-web
+        tag: 10-develop
+    public_api:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/team-docker-int/sfera-teams-public-api
+        tag: 102-release-1.21.1
+      env:
+        TEAM_SECURITY_DIR_ENABLED: false
+        TEAM_SECURITY_LEGACY_FILTER_ENABLED: true
+        TEAM_TECH_CREDENTIALS_USERNAME: yuriy.zhukovsky@t1.demo.ru
+        TEAM_TECH_CREDENTIALS_PASSWORD: demo
+
+ppmf:
+  enabled: false
+  demo_db_init:
+    database: "ppmf_auth ppmf_data ppmf_scheduler ppmf_settings ppmf_storage"
+  services:
+    auth:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/engr-auth
+        tag: 0.31.3
+      env:
+        LDAP_GROUPS_BASE_DN: "OU=ppmf,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru"
+        LDAP_1_GROUPS_BASE_DN: "OU=ppmf,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru"
+    migration:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-migration
+        tag: 1.12.0
+    scheduler:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-scheduler
+        tag: 1.5.0
+    session_manager:
+      enabled: false
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-session-manager
+        tag: 1.15.0
+    autotest_proxy:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-autotest-proxy
+        tag: 1.7.1
+    front:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-frontend
+        tag: 1.22.0
+    gateway:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-gateway
+        tag: 2.2.0
+    rolesync:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-role-sync
+        tag: 2.1.0
+    api:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-api
+        tag: 1.23.0
+    appium:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-appium
+        tag: 1.3.0
+    settings:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-settings
+        tag: 1.5.0
+    notification:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-notification
+        tag: 1.5.0
+    android_provider:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-android-provider
+        tag: 1.14.0
+    ios_provider:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-ios-provider
+        tag: 1.6.0
+    app_signer:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-app-signer
+        tag: 1.2.0
+    adb_proxy:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-adb-proxy
+        tag: 1.3.0
+    storage:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-storage
+        tag: 1.7.0
+    router:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-router
+        tag: 1.1.0
+    video_recorder:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-video-recorder
+        tag: 1.2.0
+    clamav:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppmf/ppmf-clamav
+        tag: 1.0.0
+      env:
+        PORT: '3310'
+
+
+swh:
+  enabled: false
+  demo_db_init:
+    database: "swh"
+  services:
+    backend:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/swh/api-registry-be
+        tag: 1.1.8
+
+    frontend:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/swh/api-registry-fe
+        tag: 1.1.7
+
+ppmn:
+  enabled: false
+  demo_db_init_yaml:
+  - name: "ppmn_bell"
+    databasecommand_raw: |
+      psql ppmn_bell -c 'TRUNCATE TABLE notification_bell;' || true
+  - name: "ppmn_core"
+    databasecommand_raw: |
+      psql ppmn_core -c 'TRUNCATE TABLE request_recipient;' || true
+      psql ppmn_core -c 'TRUNCATE TABLE request_action;' || true
+      psql ppmn_core -c 'TRUNCATE TABLE request CASCADE;' || true
+  - name: "ppmn_status"
+    databasecommand_raw: |
+      psql ppmn_status -c 'TRUNCATE TABLE notification_status;' || true
+  - name: "ppmn_email"
+    databasecommand_raw: |
+      psql ppmn_email -c 'TRUNCATE TABLE notification_email;' || true
+  - name: "ppmn_user_info"
+  services:
+    core:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppmn-docker-public/sfera-notif-core
+        tag: 33-release-1.14.0
+      env:
+        KAFKA_PROFILE: kafka-no-ssl
+        SFERA_NOTIF_BELL_BASE_URL: http://ppmn-bell:8000
+        SFERA_NOTIF_EMAIL_BASE_URL: http://ppmn-email:8000
+    status:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppmn-docker-public/sfera-notif-status
+        tag: 9-release-1.14.0
+      env:
+        KAFKA_PROFILE: kafka-no-ssl
+    bell:
+      image:
+        repository: nexus3.t1.demo.ru/ppmn-docker-public/sfera-notif-bell
+        tag: 17-release-1.14.0
+      env:
+        KAFKA_PROFILE: kafka-no-ssl
+    bell_ws_adapter:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/ppmn-docker-public/sfera-notif-bell-ws-adapter
+        tag: 13-release-1.14.0
+      env:
+        KAFKA_PROFILE: kafka-no-ssl
+    gateway:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/ppmn-docker-public/sfera-notif-gateway
+        tag: 16-release-1.14.0
+      payload:
+        additionalContainers:
+        - name: "RELEASE_NAME-opa"
+          image: nexus.t1.demo.ru/ppch-docker-snapshot/openpolicyagent/opa:0.49.0-istio
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 10
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8181
+            timeoutSeconds: 10
+          ports:
+          - containerPort: 8181
+            name: work
+            protocol: TCP
+          - containerPort: 8282
+            name: diagnostic
+            protocol: TCP
+          volumeMounts:
+          - mountPath: /config/config.yaml
+            name: ppmn-opa-config
+            readOnly: true
+            subPath: config.yaml
+          args:
+          - 'run'
+          - '--server'
+          - '--log-level'
+          - 'debug'
+          - '--config-file=/config/config.yaml'
+          - '--addr=0.0.0.0:8181'
+          - '--diagnostic-addr=0.0.0.0:8282'
+          - '--set=services.default.url=http://ppam-policy-management-service:8000/api/internal/bundles'
+          - '--set=bundles.default.resource=PPCH/sfera-notif-gateway'
+        volumeMounts:
+        - name: keystores
+          mountPath: /opt/t1.demo.ru.cacerts
+        volumes:
+        - configMap:
+            defaultMode: 511
+            items:
+            - key: config.yaml
+              path: config.yaml
+            name: ppmn-opa-config
+          name: ppmn-opa-config
+        - name: keystores
+          hostPath:
+            type: File
+            path: /opt/t1.demo.ru.cacerts
+    ui:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/ppmn-docker-public/sfera-notif-ui
+        tag: 24-release-1.14.0
+    email:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus3.t1.demo.ru/ppmn-docker-public/sfera-notif-email
+        tag: 37-release-1.14.0
+    admin_ui:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppmn-docker-public/sfera-notif-admin-ui
+        tag: 55-release-1.14.0
+
+
+ppam:
+  enabled: false
+  demo_db_init:
+    database: "policy_managment subject_assigment"
+  services:
+    gateway:
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/ppam-gateway
+        tag: 51-release-1.14.0
+      env:
+        TRUSTED_SSL_CERTIFICATES: /etc/ssl/certs/ca-bundle.crt
+    policy_management_service:
+      opa:
+        enabled: true
+        localPolicy:
+          enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/ppam-policy-managment-service
+        tag: 114-release-1.11.0
+    subject_assigment_service:
+      opa:
+        enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/ppam-subject-assigment-service
+        tag: 746-release-1.14.0-rc
+      env:
+        LDAP_USER_PASSWORD: 12345Qq
+        PPAM_CLIENT_SECRET: VyjWzdsDHvYmRQHHWSPD52SZmKlisVg2
+    subject_assigment_ui:
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-subject-assignment-ui
+        tag: 419-release-v1.14.0
+    policy_management_ui:
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-policy-management-ui
+        tag: 92-release-v1.11.0
+    role_management_ui:
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-snapshot/sfera-role-management-ui
+        tag: 363-release-v1.11.0
+
+ppse:
+  enabled: false
+  demo_db_init:
+    database: "ppse"
+  services:
+    gateway:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-pub/ppse-gateway
+        tag: 26-release-2.5.0
+      env:
+        SFERA_SUBO_INDEXER_URL: ppse-indexer:8080
+    backsearch:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-pub/ppse-back-search
+        tag: 261-release-2.5.0
+    indexer:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-pub/ppse-indexer
+        tag: 84-release-2.5.0
+      env:
+        APPLICATION_S3_ENABLED: false
+        APPLICATION_ACCESS_RIGHTS_ENABLED: false
+    widget:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-pub/sfera-search-widget
+        tag: 300-release-2.2.1
+
+ppmp:
+  enabled: false
+  demo_db_init:
+    database: "ppmp"
+  services:
+    service:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppmp-docker-snapshot/sfera-ppmp-service
+        tag: 134-release-1.0
+    web:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nexus.t1.demo.ru/ppts-docker-snapshot/sfera-ppmp-web
+        tag: 44-release1.17.0
+
+pplc:
+  enabled: false
+  demo_db_init:
+    database: "sca_app sca_feed"
+  services:
+    backend:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplc/pplc-sca-backend
+        tag: 2024.6.37
+      env:
+        LOGGING_CONFIG: classpath:logback-plain.xml
+        LOGGING_LEVEL_ROOT: DEBUG
+        SECURITYSERVICE_OAUTH2_CREDENTIALS_CLIENTSECRET: "qdWvMZnyUa26Oi4T8pJjnl4KOmKrZNYX"
+    feed:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/pplc/pplc-sca-feed
+        tag: 2024.3.6
+    front:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/pplc/pplc-sca-frontend
+        tag: 2024.6.86
+
+ppdl:
+  enabled: false
+  demo_db_init:
+    database: "ppdl_app"
+  services:
+    backend:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppdl/ppdl-app-backend
+        tag: 2024.5.48
+      env:
+        LOGGING_LEVEL: debug
+    front:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/dev/ppdl/ppdl-app-frontend
+        tag: 2024.5.68
+
+docusaurus:
+  enabled: false
+  services:
+    docusaurus:
+      image:
+        repository: nexus.t1.demo.ru/docusaurus
+        tag: 0.1.1
+
+appd:
+  enabled: false
+  demo_db_init:
+    database: "sfera_appd_service"
+
+puls:
+  enabled: false
+  demo_db_init:
+    database: "puls_service"
+  services:
+    gateway:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/puls-docker-int/sfera-pulse-gateway
+        tag: 94-release-2.1.0
+      env:
+        SFERA_GATEWAY_TRUSTED_CERTIFICATES: /opt/ssl/ca.crt
+        PULSE_LOGGING_LEVEL: DEBUG
+      payload:
+        volumeMounts:
+        - name: jks-certificate
+          mountPath: /opt/ssl/ca.crt
+          subPath: ca.crt
+          readOnly: true
+        volumes:
+        - name: jks-certificate
+          secret:
+            secretName: sfera-pulse-request-processor-certificate-secret
+            items:
+            - key: ca.crt
+              path: ca.crt
+    web:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/puls-docker-int/sfera-pulse-web
+        tag: 111-release-2.1.0
+    service:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/puls-docker-int/sfera-pulse-service
+        tag: 86-release-2.1.0
+    adapter_framework:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/puls-docker-int/sfera-pulse-adapter-framework
+        tag: 11-release-2.1.0
+      env:
+        PULSE_SYSTEM_SFERA_KEYSTORE_PASSWORD: sfera-pulse-adapter-framework
+        PULSE_SYSTEM_SFERA_TRUSTSTORE_PASSWORD: sfera-pulse-adapter-framework
+      payload:
+        volumeMounts:
+        - name: jks-certificate
+          mountPath: /opt/ssl/
+          readOnly: true
+        volumes:
+        - name: jks-certificate
+          secret:
+            secretName: sfera-pulse-adapter-framework-certificate-secret
+            items:
+            - key: keystore.jks
+              path: keystore.jks
+            - key: truststore.jks
+              path: truststore.jks
+    request_processor:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/puls-docker-int/sfera-pulse-request-processor
+        tag: 49-release-2.1.0
+      env:
+        AUTH_KEYSTORE_LOCATION: /opt/ssl/keystore.jks
+        AUTH_TRUSTSTORE_LOCATION: /opt/ssl/truststore.jks
+        AUTH_TRUSTSTORE_PASSWORD: "sfera-pulse-request-processor"
+      payload:
+        volumeMounts:
+        - name: jks-certificate
+          mountPath: /opt/ssl/
+          readOnly: true
+        volumes:
+        - name: jks-certificate
+          secret:
+            secretName: sfera-pulse-request-processor-certificate-secret
+            items:
+            - key: keystore.jks
+              path: keystore.jks
+            - key: truststore.jks
+              path: truststore.jks
+
+#Сфера.Архитектура
+ppan:
+  enabled: false
+  demo_db_init:
+    database: ppan
+  services:
+    model:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppan-docker-int/sfera-arch-model
+        tag: 233-v.1.9.0
+      env:
+        SFERA_PPAN_KAFKA_KEYSTORE: /opt/t1.demo.ru.cacerts
+        SFERA_PPAN_TRUSTED_CERTIFICATES: /opt/t1.demo.ru.cacerts
+        PPAN_TECHNICAL_ACCOUNT_URL: http://sfera-core-gateway-service:8000/api/auth/login
+        PPAN_ASSIGNMENTS_URL: http://ppam-gateway:8000
+        PPAN_TECHNICAL_ACCOUNT_USERNAME: yuriy.zhukovsky@t1.demo.ru
+        PPAN_TECHNICAL_ACCOUNT_PASSWORD: demo
+        PPAN_DIR_ENABLED: true
+        PPAN_DB_URL: jdbc:postgresql://pgsql-proxy:5432/ppan
+      payload:
+        volumeMounts:
+        - name: keystores
+          mountPath: /opt/t1.demo.ru.cacerts
+        volumes:
+        - name: keystores
+          hostPath:
+            type: File
+            path: /opt/t1.demo.ru.cacerts
+    gateway:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppan-docker-int/sfera-arch-gateway
+        tag: 25-v.1.9.0
+      env:
+        OAUTH2_ENABLED: true
+        SFERA_ARCH_SERVICE_URL: http://sfera-arch-model:8000
+        SFERA_GATEWAY_URL: http://sfera-core-gateway-service:8000
+        SFERA_SUBO_PATH: ppan
+        SFERA_WIKI_SERVICE_URL: http://sfera-wiki-file:8000
+        PPAN_LOGSTASH_TCP_ENABLED: false
+        SFERA_GATEWAY_TRUSTED_CERTIFICATES: /opt/ssl/ca.crt
+      payload:
+        volumeMounts:
+        - name: tls-ca-cert
+          mountPath: /opt/ssl/ca.crt
+          subPath: ca.crt
+          readOnly: true
+        volumes:
+        - name: tls-ca-cert
+          secret:
+            secretName: sfera-arch-gateway-certificate-secret
+            items:
+            - key: ca.crt
+              path: ca.crt
+    web:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppan-docker-int/sfera-arch-web
+        tag: 285-v.1.9.0
+    file:
+      enabled: true
+      image:
+        repository: nexus3.t1.demo.ru/ppwi-docker-int/sfera-wiki-file
+        tag: 237-develop
+      env:
+        S3_BUCKET_NAME: minio-ppan
+
+

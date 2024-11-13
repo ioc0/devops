@@ -1,0 +1,567 @@
+dependency:
+  operator:
+    version: 1.71.131-3-demo #
+  s3:
+    pg_restore_path: backup/sql/stands/october/1
+    s3_restore_path: bucket/stands/october/0
+  dns:
+    env: november
+    local: november.t1.demo.ru
+    external: november.sfera.ru.net
+
+#Cфера.Канальное приложение
+ppch:
+  enabled: true
+  services:
+    gateway:
+      ingress:
+        enabled: true
+        host: docker-november.t1.demo.ru
+
+#Сфера.Задачи
+ppts:
+  enabled: true
+  conductorui:
+    ingress:
+      host: november-conductor.t1.demo.ru
+  tasks:
+    env:
+      TASKS_ATTACHMENTS_PREVIEW_GENERATE_ENABLE: true
+      TASKS_APPROVALS_KAFKA_ENABLED: true
+      TASKS_APPROVALS_KAFKA_USER_LOGIN: yuriy.zhukovsky@t1.demo.ru
+      SFERA_PLATFORM_LINKS_INTEGRATIONSYSTEM_GITLAB_FORBIDDENDELETE: true
+      TASKS_INTEGRATION_GITLAB_ENABLED: true
+      SFERA_TASKS_CONFIG_ENABLED: true
+      SFERA_TASKS_CONFIG_REST_ENABLED: true
+      SFERA_TASKS_APPROVALSKAFKA_ENABLE: true
+      TASKS_IMPORT_JIRA_ENABLED: true
+      TASKS_CREATE_SPRINT_ENABLED: true
+      TASKS_DIRECTLINK_URL: https://november.sfera.ru.net/tasks/?open=
+
+  import_jira:
+    env:
+      SFERA_FILES_BASE_URL: http://ppts-tasks-tasks:8000
+      TASKS_IMPORT_TASKS_BATCH_SIZE: 100
+      SERVER_PORT: 8000
+      APP_PORT: 8000
+      SFERA_AUTH_SERVICE_URL: "http://common-gateway:8000"
+      SFERA_AUTH_USERNAME: ci_dos_PPTS@t1.demo.ru
+      SFERA_AUTH_LOGIN_ENDPOINT: /api/auth/login
+      SFERA_TASKS_TRUSTED_CERTIFICATES: /opt/t1.demo.ru.cacerts
+      SFERA_TASKS_TRUSTED_CERTIFICATES_PASSWORD: changeit
+      SFERA_TASKS_SSL_TRUSTSTORE_TYPE: PKCS12
+      SPRING_CODEC_MAXINMEMORYSIZE: 50MB
+      # TASKS_SET_CONFIGURATION_ENDPOINT: /api/v1/configuration #	Эндпоинт загрузки конфигурации системы Задачи
+      # TASKS_SET_CONFIGURATION_DATA_ENDPOINT: /api/v1/configuration/data	#Эндпоинт загрузки конфигурации системы Задачи
+  event_adapter:
+    enabled: true
+
+
+#Сфера.Поиск
+ppse:
+  enabled: true
+
+#Сфера.Знания
+ppwi:
+  enabled: true
+  services:
+    access:
+      env:
+        LDAP_GROUPS_ADMIN_ROLE_MAPPING: CN=cloud-ppwi-ldap-admin-demo,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_AUDITOR_ROLE_MAPPING: CN=cloud-ppwi-ldap-auditor-demo,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_USER_ROLE_MAPPING: CN=Dos_PPWI_devs_outstaff,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru;CN=cloud-ppwi-ldap-user-demo,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+    drawio:
+      ingress: drawio-november.t1.demo.ru
+    page:
+      env:
+        FEATURE_TOGGLE_QL_EXPORT_ENABLED: true
+        PAGE_IMPORT_ACCOUNTS_CONFLUENCE_0_TITLE: demo
+        PAGE_IMPORT_ACCOUNTS_CONFLUENCE_0_USERNAME: demo
+        PAGE_IMPORT_ACCOUNTS_CONFLUENCE_0_PASSWORD: demo
+        PAGE_IMPORT_ACCOUNTS_CONFLUENCE_0_USERNAME_TRANSLATION_RULES_0_PATTERN: "[^@]+"
+        PAGE_IMPORT_ACCOUNTS_CONFLUENCE_0_USERNAME_TRANSLATION_RULES_0_REPLACEMENT: "$0@t1.demo.ru"
+        AUDIT_ADAPTER_ENABLED: false
+        AUDIT_ADAPTER_LOCAL_ENABLED: false
+        PAGE_HARD_DELETE_LIFETIME: 1m
+        PAGE_HARD_DELETE_LOCK_AT_LEAST_FOR: 1m
+        PAGE_HARD_DELETE_LOCK_AT_MOST_FOR: 1m
+        PAGE_HARD_DELETE_SCHEDULE_TIME: "* */1 * * * ?"
+      payload:
+        command:
+        - java
+        - -XX:MaxRAMPercentage=95
+        - -Dfile.encoding=UTF-8
+        - -Djava.security.egd=file:/dev/urandom
+        - -Djavax.net.debug=ssl:handshake
+        - --add-opens=java.base/java.lang=ALL-UNNAMED
+        - -jar
+        - app.jar
+    config:
+      env:
+        SEARCH_ENABLED: true
+        SEARCH_INT_ENABLED: false
+        COLLABORATIVE_EDITING_ENABLED: true
+        APPROVALS_ENABLED: true
+        FILE_PDF_PREVIEW_ENABLED: true
+        NOTIFIER_ENABLED: true
+        APPROVALS_INT_ENABLED: true
+        SFERA_AUDIT_ENABLED: false
+        ML_SUMMARY_ENABLED: true
+    gateway:
+      env:
+        SFERA_PAGE_EXPORT_PDF_ROUTE_ENABLED: true
+        SFERA_PAGE_EXPORT_DOCX_ROUTE_ENABLED: true
+        SFERA_SUBO_SEARCH_URL: http://ppse-gateway:8000
+        NPS_ENABLED: true
+        FEEDBACK_WIDGETS_ROOT_URI: http://sfera-core-gateway-service:8000
+        NPS_Q1: "Оцените удобство работы или опишите проблему"
+    plantuml:
+      env:
+        PLANTUML_LIMIT_SIZE: 8192
+    space:
+      env:
+        PAGE_HARD_DELETE_LOCK_AT_LEAST_FOR: 1m
+        PAGE_HARD_DELETE_LOCK_AT_MOST_FOR: 1m
+        PAGE_HARD_DELETE_SCHEDULE_TIME: "* */1 * * * ?"
+
+#Сфера.Документы
+ppar:
+  enabled: true
+  services:
+    gateway:
+      env:
+        LOGGING_CONFIG: ""
+        PLANTUML_ROOT_URI: http://ppar-documents-plantuml:8080
+    documents_plugin_api:
+      env:
+        PLANT_UML_ROOT_URI: https://november.sfera.ru.net/app/documents/api/plantuml/
+        USER_LDAP_BASE_DN: OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_AUTHOR_ROLE_MAPPING: memberOf=CN=ppar-demo-author,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_ADMIN_ROLE_MAPPING: memberOf=CN=ppar-demo-admin,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_APPROVER_ROLE_MAPPING: memberOf=CN=ppar-demo-approver,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_OWNER_ROLE_MAPPING: memberOf=CN=ppar-demo-owner,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_VIEWER_ROLE_MAPPING: memberOf=CN=ppar-demo-viewer,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_METODOLOG_ROLE_MAPPING: memberOf=CN=ppar-demo-metodolog,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_SEC_ANALYST_ROLE_MAPPING: memberOf=CN=ppar-demo-sec-analyst,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_SEC_AUDITOR_ROLE_MAPPING: memberOf=CN=ppar-demo-sec-auditor,OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+    confluence:
+      env:
+        BASE_CONFLUENCE_URL: https://confluence.t1.demo.ru
+        CONFLUENCE_LOGIN: demo
+        CONFLUENCE_PASSWORD: demo
+    backend:
+      env:
+        MAX_UPLOAD_SIZE: 10MB # это лучше не переносить в оператор
+        APPROVALS_STATUS_TOPIC: 2069_APPROVALS_EVENT_FOR_DOCUMENTS # изменить в операторе (вернее как добавить)
+        APPROVALS_STATUS_TOPIC_GROUP_ID: 2069_APPROVALS_EVENT_FOR_DOCUMENTS,2069_APPROVALS_RULE_DICTIONARY # изменить в операторе (вернее как добавить)
+        APPROVALS_TEMPLATE_TOPIC: 2069_APPROVALS_RULE_DICTIONARY
+        KAFKA_ENABLED: true
+
+#Сфера.Согласования
+ppap:
+  enabled: true
+  services:
+    api:
+      env:
+        SFERA_APPROVALS_PLAN_DATE_CALCULATION_WITH_CALENDAR: true
+        SFERA_APPROVALS_APPROVERS_LIST_ENABLED: true
+        SFERA_APPROVALS_DICTIONARY_BASE_PATH: http://ppap-catalog-svc:8000
+        SFERA_APPROVALS_USER_DELEGATION_KAFKA_TOPIC: 2202_APPROVALS_USER_DELEGATION, 2202_APPROVALS_USER_APPROVAL_DELEGATION
+        SFERA_APPROVALS_SCHEDULER_START_DELEGATION_ENABLED: true
+        SFERA_APPROVALS_SCHEDULER_START_DELEGATION_CRON: "0 1 0 * * *"
+        SFERA_APPROVALS_SCHEDULER_END_DELEGATION_ENABLED: true
+        SFERA_APPROVALS_SCHEDULER_END_DELEGATION_CRON: "0 1 0 * * *"
+    notification:
+      env:
+        SFERA_APPROVALS_SFERA_NOTIFICATION_ENABLED: true
+        SFERA_APPROVALS_SFERA_NOTIFICATION_TITLE_ENABLED: false
+        SFERA_APPROVALS_OS_NOTIFICATION_ENABLED: false
+    gateway:
+      env:
+        SFERA_APPROVALS_EXTENSION_ENABLED: true
+        SFERA_APPROVALS_PLUGIN_HUB_CLIENT_ENABLED: true
+        PLUGIN_HUB_ROOT_URI: http://ppap-plugin-hub-api:8000
+    plugin_api:
+      env:
+        FEIGN_SSL_ENABLE: true
+    catalog:
+      env:
+        PROFILE_USER_SEARCH_URL: 'https://november.t1.demo.ru/api/profile/userSearch'
+    history:
+      env:
+        SFERA_APPROVALS_HISTORY_IGNORED_EVENTS: "OVERDUE, START_DELEGATION, END_DELEGATION"
+
+#Сфера.Доступы и роли
+ppam:
+  enabled: true
+
+#Сфера.Нотификации
+ppmn:
+  enabled: true
+  services:
+    email:
+      env:
+        KAFKA_PROFILE: kafka-no-ssl
+        RECIPIENTS_DOMAIN: email_region
+        SFERA_GATEWAY_URL: http://common-gateway:8000
+        RECIPIENTS_REST_USER: ci_dos_PPTS@t1.demo.ru
+        RECIPIENTS_REST_PASSWORD: 12345Qq
+
+#Сфера.Главная страница(Пульс)
+ppmp:
+  enabled: true
+
+#Сфера.Функциональное тестирование
+pptm:
+  enabled: true
+  services:
+    core:
+      env:
+        SFERA_TASKS_ENABLED: true
+        SFERA_TASKS_URL: http://ppts-tasks-gateway:8000
+        PPTM_GATEWAY_URL: http://pptm-gateway:8000
+        APPLICATION_SERVICES_SFERA-ASSIGNMENTS_REPLICA_URL: http://ppam-gateway:8000
+        SFERA_AUTH_CLIENT_SECRET: MoFjrNJoqR2vMftnAg7U9WTA6NW7JmNh
+    links:
+      env:
+        SFERA_TASKS_ENABLED: true
+    gateway:
+      env:
+        SFERA_BASE_URL: http://common-gateway:8000
+    at:
+      env:
+        PPTM_GATEWAY_URL: http://pptm-gateway:8000
+        SFERA_TASKS_URL: http://ppts-tasks-gateway:8000
+
+#Сферы.Контрольные точки
+ppqg:
+  enabled: true
+
+#Сфера.Релизы 1.0
+pprc1:
+  enabled: false
+  services:
+    backend:
+      env:
+        SUBO_TASKS_ENABLED: true
+        SUBO_QUALITY_GATES_ENABLED: true
+
+#Сфера.Релизы 2.0
+pprc:
+  enabled: false
+  services:
+    backend:
+      env:
+        SUBO_TASKS_ENABLED: true
+        SUBO_QUALITY_GATES_ENABLED: true
+        # fw_backend:
+        #   env:
+        #     PPRC_FW_DB_DEFAULT_SCHEMA: pprc_fw_db_schema_1
+        #     PPRC_FW_DB_MIGRATION_SCHEMA: pprc_fw_db_migration_schema_1
+
+
+# Сфера.Тестирование веб
+ppat:
+  enabled: true
+
+# Сфера.Команда
+team:
+  enabled: true
+  services:
+    service:
+      env:
+        WORKFLOW_EVENT_EMITTER: true
+        TEAM_APPROVALS_KAFKA_ENABLE: true
+        TEAM_APPROVALS_ENABLED: true
+        TEAM_USER_SEARCH_ENABLED: true
+        TEAM_VALIDATION_ENABLED: false
+        #включение/отключение валидации до версии 1.31.1 (для демо отключаем)
+        # TEAM_PLUGIN_PATH: /opt/app/plugins
+        # включение/отключеие валидации после версии 1.31.1 (для демо отключаем, по умолчанию true)
+        # TEAM_VALIDATION_ENABLED: false
+        TEAM_REPORTS_ENABLED: false
+        # частота запуска генерации отчетов (в миллисекундах)
+      #  TEAM_REPORTS_COLLECT_RATE
+      # рассписание смены статусов отчетов команд в формате cron
+      #  TEAM_REPORTS_CHANGE_STATUS_CRON
+
+    calendar:
+      env:
+        TEAM_ENABLE_AUTH: true
+
+#Сфера.Нагрузочное тестирование - версия для обновления следующего стенда, сохранить пока
+pplt:
+  enabled: true
+  services:
+    gateway:
+      env:
+        KEYCLOAK_URL: "http://keycloak-november.t1.demo.ru/"
+        ROLES_RETRIEVE_ENABLED: false
+    agent:
+      env:
+        PLATFORM_COMMUNICATION_QUEUE_PROGRESS_NAME: 'lt_job_progress'
+        METRICS_OUTPUT_CLICKHOUSE_PORT: 8123
+        PLATFORM_REGISTER_ENABLED: true
+    admin:
+      env:
+        OPA_URL: http://localhost:8181
+        PPAM_SERVICE_URL: http://ppam-subject-assigment-service:8000
+        PPAM_AUTH_URL: http://common-gateway:8000/api/auth/login
+        PPAM_USERNAME: 'ci_dos_PPTS@t1.demo.ru'
+        PPAM_PASSWORD: '12345Qq'
+        PPAM_SYNC_OBJECTS_SCHEDULE: '1 * * * * *'
+      payload:
+        additionalContainers:
+        - name: "RELEASE_NAME-opa"
+          image: nexus.t1.demo.ru/ppch-docker-snapshot/openpolicyagent/opa:0.49.0-istio
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8181
+            name: work
+            protocol: TCP
+          args:
+          - 'run'
+          - '--server'
+          - '--log-level'
+          - 'debug'
+          - '--addr=0.0.0.0:8181'
+          - '--set=services.default.url=http://ppam-policy-management-service:8000/api/internal/bundles'
+          - '--set=bundles.default.resource=PPLT/lt-admin-panel'
+    execution:
+      env:
+        PLATFORM_COMMUNICATION_QUEUE_PROGRESS_NAME: 'lt_job_progress'
+        METRICS_OUTPUT_CLICKHOUSE_PORT: 8123
+        PLATFORM_REGISTER_ENABLED: true
+      payload:
+        additionalContainers:
+        - name: "RELEASE_NAME-opa"
+          image: nexus.t1.demo.ru/ppch-docker-snapshot/openpolicyagent/opa:0.49.0-istio
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8181
+            name: work
+            protocol: TCP
+          args:
+          - 'run'
+          - '--server'
+          - '--log-level'
+          - 'debug'
+          - '--addr=0.0.0.0:8181'
+          - '--set=services.default.url=http://ppam-policy-management-service:8000/api/internal/bundles'
+          - '--set=bundles.default.resource=PPLT/lt-execution-manager'
+    report:
+      env:
+        GRAFANA_RENDER_TIME_ZONES: Europe/Moscow,Asia/Tomsk
+      payload:
+        additionalContainers:
+        - name: "RELEASE_NAME-opa"
+          image: nexus.t1.demo.ru/ppch-docker-snapshot/openpolicyagent/opa:0.49.0-istio
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8181
+            name: work
+            protocol: TCP
+          args:
+          - 'run'
+          - '--server'
+          - '--log-level'
+          - 'debug'
+          - '--addr=0.0.0.0:8181'
+          - '--set=services.default.url=http://ppam-policy-management-service:8000/api/internal/bundles'
+          - '--set=bundles.default.resource=PPLT/lt-report-service'
+
+
+
+# Ниже Инженерка
+# Код
+ppsc:
+  enabled: true
+  auth:
+    env:
+      LDAP_GROUPS_BASE_DN: OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+      LDAP_GROUPS_FILTER: (&(objectClass=group)(|(sAMAccountName=tat-dev_*)(sAMAccountName=sfera_i_*)))
+      LDAP_1_GROUPS_BASE_DN: OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+      LDAP_1_GROUPS_FILTER: (&(objectClass=group)(|(sAMAccountName=tat-dev_*)(sAMAccountName=sfera_i_*)))
+  qualityapi:
+    env:
+      KP_USERNAME: yuriy.zhukovsky@t1.demo.ru
+      KP_PASS: demo
+  backend:
+    env:
+      CODILO_ENABLE: true
+      TASK_INTEGRATION_ENABLED: true
+      TASK_INTEGRATION_USER: yuriy.zhukovsky@t1.demo.ru
+      TASK_INTEGRATION_PASSWORD: 12345Qq
+  scanner:
+    env:
+      AUTH_HOST: http://sfera-core-gateway-service:8000/api/auth
+      TRACING_ENABLED: false
+      TRACING_HOST: http://localhost
+  compute:
+    enabled: false
+    env:
+      AUTH_HOST: http://sfera-core-gateway-service:8000/api/auth
+      KP_PASS: demo
+      KP_USERNAME: yuriy.zhukovsky@t1.demo.ru
+
+# CI/CD: Оркестрация
+ppor:
+  enabled: true
+  services:
+    war:
+      env:
+        SFERA_CODE_PR_REGISTRY_URL: https://${REGISTRY_URL}/quality-api/api/issues
+        SFERA_TESTING_REGISTRY_URL: https://${REGISTRY_URL}${SFERA_TESTING_API_PATH}/openapi/at/api/v1/autotest-runs
+        SFERA_TESTING_API_PATH: https://${REGISTRY_URL}${SFERA_TESTING_API_PATH}/openapi/at/api/v1/autotest-runs
+
+# Портал разработки
+dvpr:
+  enabled: true
+  services:
+    componentservice:
+      env:
+        DB_NAME: devportal-component
+        DEVOPS_TOOL_AVAILABLE_CREATE_PROJECTS: false
+        DEVOPS_TOOL_ENABLED: true
+        DEVOPS_TOOL_ID: 0e20cd9c-d698-4f39-8a05-18bd0dc7e414
+        DEVOPS_TOOL_NAME: ОРКЕСТРАЦИЯ 1
+        DEVOPS_TOOL_API_ENDPOINT: http://common-gateway:8000/app/orchestration/api
+        DEVOPS_TOOL_PROJECT_PATH: http://common-gateway:8000/orchestration/dashboard
+        APP_DEVOPS_MULTI_INSTANCE: disabled
+    componentworker:
+      env:
+        DB_NAME: devportal-worker
+        DEVOPS_TOOL_ENABLED: true
+        DEVOPS_TOOL_ID: 0e20cd9c-d698-4f39-8a05-18bd0dc7e414
+        DEVOPS_TOOL_NAME: ОРКЕСТРАЦИЯ 1
+        DEVOPS_TOOL_API_ENDPOINT: http://common-gateway:8000/app/orchestration/api
+        DEVOPS_TOOL_PROJECT_PATH: http://common-gateway:8000/orchestration/dashboard
+    metricsservice:
+      env:
+        DEVOPS_TOOL_AVAILABLE_CREATE_PROJECTS: false
+        DEVOPS_TOOL_ENABLED: true
+        DEVOPS_TOOL_ID: 0e20cd9c-d698-4f39-8a05-18bd0dc7e414
+        DEVOPS_TOOL_NAME: ОРКЕСТРАЦИЯ 1
+        DEVOPS_TOOL_API_ENDPOINT: http://common-gateway:8000/app/orchestration/api
+        DEVOPS_TOOL_PROJECT_PATH: http://common-gateway:8000/orchestration/dashboard
+        APP_SFERA_URL: http://common-gateway:8000
+        APP_DEVOPS_ORCHESTRATION_API-ENDPOINT: http://common-gateway:8000/app/orchestration/api
+        APP_DEVOPS_ORCHESTRATION_URL: http://common-gateway:8000/orchestration/dashboard/projects/
+        APP_GIT_PROPERTIES_SFERA-CODE_API-ENDPOINT: http://common-gateway:8000/app/sourcecode/api/api/v2
+        APP_URL: http://common-gateway:8000/app/devportal/api/dvpr-gateway/dvpr-metrics-service
+    auth:
+      env:
+        LDAP_GROUPS_BASE_DN: OU=Groups,OU=demo,DC=t1,DC=demo,DC=ru
+        LDAP_GROUPS_FILTER: (&(objectClass=group)(|(sAMAccountName=tat-dev_*)(sAMAccountName=sfera_i_*)))
+
+# Дистрибутивы и библиотеки
+ppbd:
+  enabled: true
+
+# Дистрибутивы и библиотеки (новые)
+ppdl:
+  enabled: true
+
+# Лицензии
+pplc:
+  enabled: true
+  services:
+    feed:
+      env:
+        VULNERABILITYFEEDSERVICE_GITHUB_TOKEN: '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'
+
+# Мобильная ферма
+ppmf:
+  enabled: true
+  services:
+    autotest_proxy:
+      ingress: autotest-proxy-mf.november.t1.demo.ru
+
+
+
+# Архив
+appd:
+  enabled: true
+  services:
+    service:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-appd-service
+        tag: 80-feature-errp
+      env:
+        SFERA_APPD_SSL_CERTIFICATE_VERIFICATION: false
+        SFERA_APPD_DICTIONARY_BASE_PATH: http://appd-catalog-svc:8000
+        SFERA_APPD_SCHEDULER_LDAP_USER_UPLOAD_ENABLED: true
+        SFERA_APPD_SCHEDULER_LDAP_USER_UPLOAD_CRON: 0 0 5 * * *
+        APPD_LDAP_URL: ldap://t1.demo.ru:389
+        APPD_LDAP_USERNAME: ci_dos_PPTS
+        APPD_LDAP_PASSWORD: 12345Qq
+        APPD_LDAP_BASE: dc=ru,dc=inno,dc=sfera
+        APPD_LDAP_USERS_LDAP_GROUPS: CN=TEST
+        APPD_LDAP_START_DATE: 20000101000000.00Z
+        APPD_LDAP_PAGE_SIZE: 100
+        APPD_LDAP_COMMON_FILTER: (objectClass=organizationalPerson)
+        S3_URL: http://minio:9000
+        S3_BUCKET: appd
+        S3_KEY: 3d891a49e5f09f0f886e84e44651a4a0
+        S3_SECRET: 608f6c44839e0411fdecdba9a6945d49
+        TEMPLATE_DB_URL: jdbc:postgresql://pgsql-proxy:5432/sfera_appd_service?currentSchema=sfera_appd_service
+        TEMPLATE_DB_USER: sfera
+        TEMPLATE_DB_PASSWORD: e2f4afd846fd73fd9d2c732a0646bb78
+        TEMPLATE_DB_DEFAULT_SCHEMA: sfera_appd_service
+        TEMPLATE_DB_MIGRATION_SCHEMA: migration
+        TEMPLATE_DB_ADMIN_USER: sfera
+        TEMPLATE_DB_ADMIN_PASSWORD: e2f4afd846fd73fd9d2c732a0646bb78
+        APPD_SERVER_PORT: 8080
+    gateway:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-appd-gateway
+        tag: 25-feature-errp
+      env:
+        SFERA_APPD_GATEWAY_URL: http://sfera-core-gateway-service:8000
+        SFERA_APPD_SERVICE_URL: http://sfera-appd-service:8000
+    ui:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppar-docker-snapshot/sfera-appd-ui
+        tag: 38-release-1.0.0
+    catalog:
+      enabled: true
+      image:
+        repository: nexus.t1.demo.ru/ppch-docker-pub/ppdc-catalog-svc
+        tag: 188-release-1.4
+      env:
+        DB_DEFAULT_SCHEMA: ppdc_catalog
+        DB_DROP_FIRST: false
+        DB_LIQUIBASE_SCHEMA: migration
+        DB_URL: jdbc:postgresql://pgsql-proxy:5432/ppdc_catalog
+        DB_USER_NAME: sfera
+        DB_USER_PASSWORD: e2f4afd846fd73fd9d2c732a0646bb78
+        SERVER_PORT: 8000
+        SPRINGDOC_SWAGGER_UI_CONFIG_URL: /ppdc/v3/api-docs/swagger-config
+        SPRINGDOC_SWAGGER_UI_URLS_0_NAME: v1
+        SPRINGDOC_SWAGGER_UI_URLS_0_URL: /ppdc/v3/api-docs/v1/swagger.yaml
+        SPRINGDOC_SWAGGER_UI_URLS_1_NAME: v0.1
+        SPRINGDOC_SWAGGER_UI_URLS_1_URL: /ppdc/v3/api-docs
+        PROFILE_USER_SEARCH_URL: https://november.t1.demo.ru/api/profile/userSearch
+        SFERA_PLATFORM_TRUSTSTORE: /opt/t1.demo.ru.cacerts
+        SFERA_PLATFORM_TRUSTSTORE_PASSWORD: changeit
+
+# Пульс
+puls:
+  enabled: true
+# Баг оператора, надо порешать 17.10.24
+pppul:
+  enabled: false
+
+#Сфера.Архитектура
+ppan:
+  enabled: true
+
+docusaurus:
+  enabled: false
+  services:
+    docusaurus:
+      ingress: docusaurus-november.t1.demo.ru
+
